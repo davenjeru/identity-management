@@ -1,12 +1,14 @@
 /** Helper functions that are reused throughout the microservice */
 // @ts-ignore
+import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
 import env from '../config';
 import User from '../database/models/user';
+import {InvalidIdToken} from '../exceptions';
 import { serverLogger } from '../loggers';
 import MailEventEmitter from './mail';
 
-const { SECRET_KEY } = env;
+const { SECRET_KEY, GOOGLE_CLIENT_ID } = env;
 
 export const generateJWT = (user: User, expiresAfter?: number) => {
   return jwt.sign({ email: user.email }, SECRET_KEY, { expiresIn: expiresAfter || 60 * 60 * 24 });
@@ -51,3 +53,20 @@ export class VerificationEmail {
     serverLogger(`Verification email for ${mailData.to} was not sent.`);
   };
 }
+
+/**
+ * Verifies the id token
+ * @param idToken
+ */
+export const verifyGoogleToken = async (idToken: string) => {
+  try {
+    const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    return ticket.getPayload();
+  } catch (e) {
+    throw new InvalidIdToken();
+  }
+};

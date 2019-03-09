@@ -15,7 +15,7 @@ class User {
       const { records } = await db.run(
         `MATCH (u:User { email: $email })-[relIs:IS]->(role:Role),
                          (u)-[:HAS]->(p:Profile)
-                   RETURN u.name AS name, u.email AS email, p.imageUrl AS picture,
+                   RETURN u.name AS name, u.email AS email, p.imageUrl AS picture, p.lastUpdated AS lastUpdated,
                     relIs.verified AS verified, relIs.mailSent AS mailSent,
                      relIs.mailSentDate AS mailSentDate, role.roleName as roleName`
         , { email });
@@ -31,6 +31,7 @@ class User {
         mailSentDate: record.get('mailSentDate'),
         roleName: record.get('roleName'),
         picture: record.get('picture'),
+        lastUpdated: record.get('lastUpdated'),
       };
       return new User(params);
     } catch (e) {

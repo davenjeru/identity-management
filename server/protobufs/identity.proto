@@ -2,6 +2,7 @@ syntax="proto3";
 
 service IdentityService {
     rpc CreateUser (GoogleIdToken) returns (UserInfo) {}
+    rpc LoginUser (GoogleIdToken) returns (UserInfo) {}
 }
 
 message GoogleIdToken {

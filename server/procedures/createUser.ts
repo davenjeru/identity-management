@@ -1,37 +1,14 @@
-import { OAuth2Client } from 'google-auth-library';
 import { TokenPayload } from 'google-auth-library/build/src/auth/loginticket';
 import { ServerUnaryCall } from 'grpc';
-import env from '../config';
 import User from '../database/models/user';
-import { InvalidIdToken } from '../exceptions';
-import { generateJWT, VerificationEmail } from '../helpers';
-
-const { GOOGLE_CLIENT_ID } = env;
-
-const client = new OAuth2Client(GOOGLE_CLIENT_ID);
-
-/**
- * Verifies the id token
- * @param idToken
- */
-const verify = async (idToken: string) => {
-  try {
-    const ticket = await client.verifyIdToken({
-      idToken,
-      audience: GOOGLE_CLIENT_ID,
-    });
-    return ticket.getPayload();
-  } catch (e) {
-    throw new InvalidIdToken();
-  }
-};
+import { generateJWT, VerificationEmail, verifyGoogleToken } from '../helpers';
 
 const createUser = async (incomingMessage: ServerUnaryCall<object> , callback: clientCallback) => {
   try {
     // @ts-ignore
     const { request: { token: idToken } } = incomingMessage;
-    const identity: TokenPayload = await verify(idToken);
-    let user = await User.findUserByEmail(identity.email);
+    const identity: TokenPayload = await verifyGoogleToken(idToken);
+    let user: any = await User.findUserByEmail(identity.email);
     if (!user) {
       user = new User(identity);
     }

@@ -10,15 +10,16 @@ const {GRPC_SERVER_HOST, GRPC_SERVER_PORT} = env;
 
 const PROTO_PATH = resolve(__dirname, './protobufs');
 
-// @ts-ignore
 // tslint:disable-next-line: no-var-requires
 const protoLoader = require('@grpc/proto-loader');
+// tslint:enable
 const identityPackageDefinition = protoLoader.loadSync(
     resolve(PROTO_PATH, './identity.proto'),
-    {keepCase: true,
-        longs: String,
-        enums: String,
-        defaults: true,
+    {
+      keepCase: true,
+      longs: String,
+      enums: String,
+      defaults: true,
       oneofs: true,
     });
 
