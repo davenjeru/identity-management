@@ -5,8 +5,8 @@ import { buyer } from '../../database/models/role';
 import User from '../../database/models/user';
 import { clearDB } from '../../database/queries';
 import seedDB from '../../database/seeders';
-import { mockUser } from '../mockData';
 import createUser from '../createUser';
+import { mockUser } from '../mockData';
 
 describe('Create User rpc', () => {
   beforeAll(async (done) => {

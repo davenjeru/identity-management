@@ -24,6 +24,7 @@
     "grpc": "^1.19.0",
     "jsonwebtoken": "^8.5.0",
     "mailgun-js": "^0.22.0",
+    "mjml": "^4.4.0-beta.1",
     "neo4j-driver": "^1.7.2"
   },
   "devDependencies": {
@@ -32,6 +33,7 @@
     "@types/jest": "^24.0.11",
     "@types/jsonwebtoken": "^8.3.1",
     "@types/mailgun-js": "^0.16.3",
+    "@types/mjml": "^4.0.2",
     "@types/node": "^11.11.0",
     "@types/protobufjs": "^6.0.0",
     "babel-jest": "^24.4.0",
