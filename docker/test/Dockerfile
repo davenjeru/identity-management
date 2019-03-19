@@ -1,7 +1,9 @@
 FROM node:11.12-alpine
 
-LABEL MAINTAINER="Ian Duncan <ianduncan08@gmail.com>"
+LABEL author="Dave Mathews Njeru"
+LABEL application="Identity Management"
 
+# COPY is done from the buid context not the location of the dockerfile
 RUN mkdir /iam
 
 WORKDIR /iam
@@ -11,7 +13,5 @@ RUN apk update && apk upgrade && \
 
 COPY package.json /iam
 COPY yarn.lock /iam
-
-EXPOSE 50051
 
 RUN yarn install

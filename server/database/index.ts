@@ -19,10 +19,19 @@ const testConnection = async (db: Session) => {
   }
 };
 
-const { GRAPH_DB_HOST , GRAPH_DB_USER, GRAPH_DB_PASSWORD, GRAPH_DB_PROTOCOL, GRAPH_DB_PORT } = env;
+const {
+  GRAPH_DB_HOST,
+  GRAPH_DB_USER,
+  GRAPH_DB_PASSWORD,
+  GRAPH_DB_PROTOCOL,
+  GRAPH_DB_PORT,
+  GRAPH_DB_CONNECTION_TIMEOUT,
+} = env;
 const uri: string = `${GRAPH_DB_PROTOCOL}://${GRAPH_DB_HOST}:${GRAPH_DB_PORT}`;
 
-const driver = neo4j.driver(uri, neo4j.auth.basic(GRAPH_DB_USER, GRAPH_DB_PASSWORD));
+const driver = neo4j.driver(uri,
+  neo4j.auth.basic(GRAPH_DB_USER, GRAPH_DB_PASSWORD),
+  { connectionTimeout: GRAPH_DB_CONNECTION_TIMEOUT});
 const session: Session = driver.session();
 
 testConnection(session);

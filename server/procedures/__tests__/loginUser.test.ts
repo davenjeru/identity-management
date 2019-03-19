@@ -1,5 +1,4 @@
 import { verifyIdToken} from '../../../__mocks__/google-auth-library';
-import { send } from '../../../__mocks__/mailgun-js';
 import env from '../../config';
 import User from '../../database/models/user';
 import { clearDB } from '../../database/queries';
@@ -8,7 +7,7 @@ import createUser from '../createUser';
 import loginUser from '../loginUser';
 import { mockUser } from '../mockData';
 
-describe('Create User rpc', () => {
+describe('Login User rpc', () => {
   const clientCallback = jest.fn();
   const token: string = 'this is my token';
 

@@ -1,0 +1,49 @@
+version: '2.1'
+
+networks:
+  iam-net-test:
+    driver: bridge
+    name: "iam-net-test"
+
+services:
+  graphdb-test:
+    image: neo4j:latest
+    container_name: "graphdb-test"
+    networks:
+      - iam-net-test
+    expose:
+      - 7474
+      - 7473
+      - 7687
+    ports:
+      - "7474:7474"
+      - "7473:7473"
+      - "7687:7687"
+    environment:
+      NEO4J_AUTH: none
+    healthcheck:
+      test: ['CMD-SHELL', 'netstat -plnt | grep -ce "7687" > 0 || exit 1']
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  iam-server-test:
+    build:
+      context: ../..
+      dockerfile: docker/test/Dockerfile
+    container_name: "iam-server-test"
+    networks:
+      - iam-net-test
+    depends_on:
+      graphdb-test:
+        condition: service_healthy
+    volumes:
+      # volume location is not affected by context it is affected by the location of this file.
+      - /iam/node_modules
+      - ../..:/iam
+    environment:
+      NODE_ENV: 'test'
+      GRAPH_DB_HOST: graphdb-test
+      GRAPH_DB_CONNECTION_TIMEOUT: 15000
+    # entrypoint file location based on WORKDIR
+    entrypoint: ["sh", "docker/test/entrypoint.sh"]

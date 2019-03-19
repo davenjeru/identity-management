@@ -12,3 +12,4 @@ tslint.json
 yarn-error.log
 docker
 server
+neo4j

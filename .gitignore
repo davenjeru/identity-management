@@ -70,4 +70,3 @@ dist/
 .DS_Store
 
 neo4j
-*.proto
