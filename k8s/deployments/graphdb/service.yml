@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphdb-service
+spec:
+  selector:
+    app: graphdb
+  ports:
+    - port: 7687
+      protocol: TCP
+      targetPort: 7687

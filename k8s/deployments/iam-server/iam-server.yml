@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iam-server-deployment
+  labels:
+    app: iam-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iam-server
+
+  template:
+    metadata:
+      name: iam-server-pod
+      labels:
+        app: iam-server
+    spec:
+      containers:
+        - name: iam-server
+          image: shopinc/iam-server:0.0.1
+          command: ['sh', '-c', 'yarn start']
+          ports:
+            - containerPort: 50051
+          env:
+          - name:  GRAPH_DB_HOST
+            value: graphdb-service
+          envFrom:
+            - secretRef:
+                name: iam-secrets

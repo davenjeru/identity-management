@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graphdb-deployment
+  labels:
+    app: graphdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graphdb
+
+  template:
+    metadata:
+      name: graphdb-pod
+      labels:
+        app: graphdb
+    spec:
+      containers:
+        - name: graphdb
+          image: neo4j:3.5.3
+          ports:
+            - containerPort: 7687
+          envFrom:
+            - secretRef:
+                name: graphdb-secrets
