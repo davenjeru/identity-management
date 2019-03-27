@@ -13,7 +13,7 @@ services:
     container_name: 'iam-server-dev'
     environment:
       GRAPH_DB_HOST: graphdb-dev
-      GRPC_SERVER_HOST: '0.0.0.0'
+      GRPC_SERVER_HOST: 0.0.0.0
     networks:
       - iam-net-dev
     volumes:

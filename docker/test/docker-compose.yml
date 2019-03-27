@@ -1,0 +1,47 @@
+version: '2.1'
+
+networks:
+  iam-net-test:
+    driver: bridge
+    name: "iam-net-test"
+
+services:
+  iam-server-test:
+    build:
+      context: ../../
+      dockerfile: docker/development/Dockerfile
+    container_name: 'iam-server-test'
+    environment:
+      GRAPH_DB_HOST: graphdb-test
+      GRAPH_DB_CONNECTION_TIMEOUT: 15000
+      DEBUG: 'log'
+    networks:
+      - iam-net-test
+    volumes:
+      - /iam/node_modules
+      - ../../:/iam
+    depends_on:
+      graphdb-test:
+        condition: service_healthy
+    entrypoint: ["sh", "-c", "yarn ts && yarn test"]
+
+  graphdb-test:
+    container_name: 'graphdb-test'
+    image: neo4j:3.5.3
+    environment:
+      NEO4J_AUTH: none
+    networks:
+      - iam-net-test
+    # to avoid conflicts with already running development configuration
+    ports:
+      - "7464:7474"
+      - "7463:7473"
+      - "7677:7687"
+    volumes:
+      - ../../neo4j/test/data:/data
+      - ../../neo4j/test/logs:/logs
+    healthcheck:
+      test: ['CMD-SHELL', 'netstat -plnt | grep -ce "7474" > 0 || exit 1']
+      interval: 5s
+      timeout: 10s
+      retries: 5
